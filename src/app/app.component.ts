@@ -20,7 +20,7 @@ export class AppComponent {
 
 	@HostListener('document:keydown', ['$event'])
 	onKeyPress($event: KeyboardEvent) {
-		const { key } = $event;
-		this.service.onKeyPress(key);
+		$event.preventDefault();
+		this.service.onKeyPress($event.key);
 	}
 }
