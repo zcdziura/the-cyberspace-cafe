@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { keyPress } from './command.actions';
+import { backspace, keyPress } from './command.actions';
 import { CommandState } from './command.model';
 
 export const commandFeatureName = 'command';
@@ -13,5 +13,12 @@ export const commandReducers = createReducer(
 	on(keyPress, (state, { key }) => ({
 		...state,
 		command: state.command + key,
+	})),
+	on(backspace, state => ({
+		...state,
+		command:
+			state.command.length === 0
+				? state.command
+				: state.command.substring(0, state.command.length - 1),
 	}))
 );
