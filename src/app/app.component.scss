@@ -6,24 +6,29 @@
 .prompt {
 	&::before {
 		content: '$';
+		margin-right: 4px;
 	}
 
-	&::after {
-		animation: cursor-blink 1.25s steps(2) infinite;
-		background: #000;
-		content: '';
-		display: inline-block;
-		height: 26px;
-		margin-left: 2px;
-		position: relative;
-		top: 4px;
-		width: 8px;
+	&.cursor {
+		&::after {
+			background: #000;
+			content: '';
+			display: inline-block;
+			height: 26px;
+			margin-left: 2px;
+			position: relative;
+			top: 4px;
+			width: 8px;
+		}
+
+		&.blinking::after {
+			animation: cursor-blink 1.25s steps(2) infinite;
+		}
 	}
 }
 
 @keyframes cursor-blink {
 	0% {
-	  visibility: hidden;
+		visibility: hidden;
 	}
-  }
-  
+}
