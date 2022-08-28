@@ -5,4 +5,4 @@ import { commandFeatureName, commandReducers } from './command.reducers';
 @NgModule({
 	imports: [StoreModule.forFeature(commandFeatureName, commandReducers)],
 })
-export class CommandStoreModule {}
+export class CommandStateStoreModule {}
