@@ -1,19 +1,39 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import {
+	asyncScheduler,
+	fromEvent,
+	skipUntil,
+	Subject,
+	Subscription,
+	tap,
+} from 'rxjs';
 import { CommandKeybinding } from './models/command-keybinding';
 import { backspace, keyPress } from './state/command/command.actions';
 import { CommandState } from './state/command/command.model';
+import { isBlinking } from './state/cursor/cursor.actions';
+import { CursorState } from './state/cursor/cursor.model';
 
 @Injectable()
 export class AppService {
-	constructor(private readonly store: Store<CommandState>) {}
+	private afterTypingDelay: Subscription = new Subscription();
+	private readonly isDoneTyping$ = new Subject<void>();
+
+	readonly keyPressEvents$ = fromEvent(document, 'keydown').pipe(
+		tap(e => this.onKeyPress(e as KeyboardEvent)),
+		skipUntil(this.isDoneTyping$)
+	);
+
+	constructor(private readonly store: Store<CommandState | CursorState>) {}
 
 	public onKeyPress($event: KeyboardEvent) {
 		$event.preventDefault();
 
+		this.controlCursor();
+		this.store.dispatch(isBlinking({ isBlinking: false }));
+
 		const key = $event.key;
 		const isPrintable = key.length === 1;
-		console.log($event);
 
 		if (isPrintable) {
 			this.store.dispatch(keyPress({ key }));
@@ -29,6 +49,18 @@ export class AppService {
 				this.dispatchCommand(command);
 			}
 		}
+	}
+
+	private controlCursor() {
+		if (!this.afterTypingDelay.closed) {
+			this.afterTypingDelay.unsubscribe();
+		}
+
+		this.afterTypingDelay = asyncScheduler.schedule(() => {
+			this.isDoneTyping$.next();
+			this.afterTypingDelay?.unsubscribe();
+			this.store.dispatch(isBlinking({ isBlinking: true }));
+		}, 500);
 	}
 
 	private dispatchCommand(command: CommandKeybinding) {

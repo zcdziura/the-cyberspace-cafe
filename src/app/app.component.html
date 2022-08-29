@@ -1,1 +1,3 @@
-<p class="prompt cursor blinking">{{ command$ | async }}</p>
+<p class="prompt cursor" [ngClass]="{ blinking: isBlinking$ | async }">
+	{{ command$ | async }}
+</p>

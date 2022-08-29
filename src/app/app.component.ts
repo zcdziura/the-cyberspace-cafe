@@ -1,8 +1,11 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import { AppService } from './app.service';
 import { CommandState } from './state/command/command.model';
 import { selectCommand } from './state/command/command.selectors';
+import { CursorState } from './state/cursor/cursor.model';
+import { selectIsBlinking } from './state/cursor/cursor.selectors';
 
 @Component({
 	selector: 'app-root',
@@ -10,16 +13,23 @@ import { selectCommand } from './state/command/command.selectors';
 	styleUrls: ['./app.component.scss'],
 	providers: [AppService],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+	private keyPressEventsSubscription!: Subscription;
+
 	public readonly command$ = this.store.select(selectCommand);
+	public readonly isBlinking$ = this.store.select(selectIsBlinking);
 
 	constructor(
-		private readonly store: Store<CommandState>,
+		private readonly store: Store<CommandState | CursorState>,
 		private readonly service: AppService
 	) {}
 
-	@HostListener('document:keydown', ['$event'])
-	private onKeyPress($event: KeyboardEvent) {
-		this.service.onKeyPress($event);
+	ngOnInit(): void {
+		this.keyPressEventsSubscription =
+			this.service.keyPressEvents$.subscribe();
+	}
+
+	ngOnDestroy(): void {
+		this.keyPressEventsSubscription.unsubscribe();
 	}
 }

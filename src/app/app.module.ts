@@ -5,6 +5,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { CommandStateStoreModule } from './state/command/command.store.module';
+import { CursorStateStoreModule } from './state/cursor/cursor.store.module';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -12,6 +13,7 @@ import { CommandStateStoreModule } from './state/command/command.store.module';
 		BrowserModule,
 		StoreModule.forRoot({}),
 		CommandStateStoreModule,
+		CursorStateStoreModule,
 		StoreDevtoolsModule.instrument({
 			maxAge: 25,
 			autoPause: true,
