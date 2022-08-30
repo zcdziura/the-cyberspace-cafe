@@ -4,23 +4,20 @@
 }
 
 .prompt {
-	&::before {
-		content: '$';
-		margin-right: 4px;
+	& .privilege-indicator {
+		display: inline-block;
 	}
 
-	&.cursor {
-		&::after {
-			background: #000;
-			content: '';
-			display: inline-block;
-			height: 26px;
-			position: relative;
-			top: 4px;
-			width: 8px;
-		}
+	& .cursor {
+		background: #000;
+		content: '';
+		display: inline-block;
+		height: 26px;
+		position: relative;
+		top: 4px;
+		width: 8px;
 
-		&.blinking::after {
+		&.blinking {
 			animation: cursor-blink 1.25s steps(2) infinite;
 		}
 	}

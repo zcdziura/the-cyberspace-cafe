@@ -18,7 +18,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	private keyPressEventsSubscription!: Subscription;
 
 	public readonly command$ = this.store.select(selectCommand);
-	public readonly isBlinking$ = this.store.select(selectIsCursorBlinking);
+	public readonly isCursorBlinking$ = this.store.select(
+		selectIsCursorBlinking
+	);
 
 	constructor(
 		private readonly store: Store<PromptState>,
