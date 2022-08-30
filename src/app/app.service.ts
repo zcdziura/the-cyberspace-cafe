@@ -9,10 +9,12 @@ import {
 	tap,
 } from 'rxjs';
 import { CommandKeybinding } from './models/command-keybinding';
-import { backspace, keyPress } from './state/command/command.actions';
-import { CommandState } from './state/command/command.model';
-import { isBlinking } from './state/cursor/cursor.actions';
-import { CursorState } from './state/cursor/cursor.model';
+import {
+	backspace,
+	isCursorBlinking,
+	keyPress,
+} from './state/prompt/prompt.actions';
+import { PromptState } from './state/prompt/prompt.model';
 
 @Injectable()
 export class AppService {
@@ -24,13 +26,13 @@ export class AppService {
 		skipUntil(this.isDoneTyping$)
 	);
 
-	constructor(private readonly store: Store<CommandState | CursorState>) {}
+	constructor(private readonly store: Store<PromptState>) {}
 
 	public onKeyPress($event: KeyboardEvent) {
 		$event.preventDefault();
 
 		this.controlCursor();
-		this.store.dispatch(isBlinking({ isBlinking: false }));
+		this.store.dispatch(isCursorBlinking({ isCursorBlinking: false }));
 
 		const key = $event.key;
 		const isPrintable = key.length === 1;
@@ -59,7 +61,7 @@ export class AppService {
 		this.afterTypingDelay = asyncScheduler.schedule(() => {
 			this.isDoneTyping$.next();
 			this.afterTypingDelay?.unsubscribe();
-			this.store.dispatch(isBlinking({ isBlinking: true }));
+			this.store.dispatch(isCursorBlinking({ isCursorBlinking: true }));
 		}, 500);
 	}
 
