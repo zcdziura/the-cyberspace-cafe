@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { AppService } from './app.service';
-import { CommandState } from './state/command/command.model';
-import { CursorState } from './state/cursor/cursor.model';
+import { PromptState } from './state/prompt/prompt.model';
 import {
 	selectCommand,
 	selectIsCursorBlinking,
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public readonly isBlinking$ = this.store.select(selectIsCursorBlinking);
 
 	constructor(
-		private readonly store: Store<CommandState | CursorState>,
+		private readonly store: Store<PromptState>,
 		private readonly service: AppService
 	) {}
 
