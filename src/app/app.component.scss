@@ -1,24 +1,43 @@
 * {
+	color: white;
 	font-family: 'Space Mono', monospace;
 	font-size: 24px;
 }
 
-.prompt {
-	& .privilege-indicator {
-		display: inline-block;
+main {
+	align-items: center;
+	border: 6px double white;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	margin: 12px auto;
+	max-width: 1400px;
+	min-height: calc(100vh - 24px);
+
+	.history {
+		margin: 0;
+		padding: 0;
 	}
 
-	& .cursor {
-		background: #000;
-		content: '';
-		display: inline-block;
-		height: 26px;
-		position: relative;
-		top: 4px;
-		width: 8px;
+	.prompt {
+		align-self: flex-start;
 
-		&.blinking {
-			animation: cursor-blink 1.25s steps(2) infinite;
+		& .privilege-indicator {
+			display: inline-block;
+		}
+
+		& .cursor {
+			background: white;
+			content: '';
+			display: inline-block;
+			height: 26px;
+			position: relative;
+			top: 4px;
+			width: 8px;
+
+			&.blinking {
+				animation: cursor-blink 1.25s steps(2) infinite;
+			}
 		}
 	}
 }

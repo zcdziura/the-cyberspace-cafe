@@ -29,7 +29,15 @@ export class AppService {
 	constructor(private readonly store: Store<PromptState>) {}
 
 	public onKeyPress($event: KeyboardEvent) {
-		$event.preventDefault();
+		if (
+			!(
+				$event.key.toLowerCase() === 'i' &&
+				$event.ctrlKey &&
+				$event.shiftKey
+			)
+		) {
+			$event.preventDefault();
+		}
 
 		this.controlCursor();
 		this.store.dispatch(isCursorBlinking({ isCursorBlinking: false }));
