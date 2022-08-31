@@ -9,6 +9,7 @@ import {
 	tap,
 } from 'rxjs';
 import { CommandKeybinding } from './models/command-keybinding';
+import { loadBanner } from './state/history/history.actions';
 import {
 	backspace,
 	isCursorBlinking,
@@ -26,7 +27,11 @@ export class AppService {
 		skipUntil(this.isDoneTyping$)
 	);
 
-	constructor(private readonly store: Store<PromptState>) {}
+	constructor(private readonly store$: Store<PromptState>) {}
+
+	public loadBanner() {
+		this.store$.dispatch(loadBanner());
+	}
 
 	public onKeyPress($event: KeyboardEvent) {
 		if (
@@ -39,14 +44,14 @@ export class AppService {
 			$event.preventDefault();
 		}
 
-		this.controlCursor();
-		this.store.dispatch(isCursorBlinking({ isCursorBlinking: false }));
+		this.setCursorState();
+		this.store$.dispatch(isCursorBlinking({ isCursorBlinking: false }));
 
 		const key = $event.key;
 		const isPrintable = key.length === 1;
 
 		if (isPrintable) {
-			this.store.dispatch(keyPress({ key }));
+			this.store$.dispatch(keyPress({ key }));
 		} else {
 			const command = this.mapCommandKeybinding(
 				$event.key,
@@ -61,7 +66,7 @@ export class AppService {
 		}
 	}
 
-	private controlCursor() {
+	private setCursorState() {
 		if (!this.afterTypingDelay.closed) {
 			this.afterTypingDelay.unsubscribe();
 		}
@@ -69,14 +74,14 @@ export class AppService {
 		this.afterTypingDelay = asyncScheduler.schedule(() => {
 			this.isDoneTyping$.next();
 			this.afterTypingDelay?.unsubscribe();
-			this.store.dispatch(isCursorBlinking({ isCursorBlinking: true }));
+			this.store$.dispatch(isCursorBlinking({ isCursorBlinking: true }));
 		}, 500);
 	}
 
 	private dispatchCommand(command: CommandKeybinding) {
 		switch (command) {
 			case CommandKeybinding.Backspace:
-				this.store.dispatch(backspace());
+				this.store$.dispatch(backspace());
 				break;
 		}
 	}
