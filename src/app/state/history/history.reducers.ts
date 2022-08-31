@@ -12,6 +12,6 @@ export const historyStateReducers = createReducer(
 	initialState,
 	on(saveLines, (state, { lines }) => ({
 		...state,
-		lines,
+		lines: state.lines.concat(lines).slice(-1000),
 	}))
 );

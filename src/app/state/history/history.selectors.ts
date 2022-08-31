@@ -7,5 +7,5 @@ const featureSelector = createFeatureSelector<HistoryState>(
 );
 
 export const selectLines = createSelector(featureSelector, state =>
-	state.lines.join('\n')
+	state.lines.slice(-1000).join('\n')
 );
