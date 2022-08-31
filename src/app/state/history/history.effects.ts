@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, map, switchMap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { loadBanner, saveLines } from './history.actions';
 import { HistoryService } from './history.service';
 
@@ -16,7 +17,13 @@ export class HistoryEffects {
 			ofType(loadBanner),
 			switchMap(() =>
 				this.service.fetchBanner().pipe(
-					map(lines => saveLines({ lines })),
+					map(lines => {
+						const buildTimeStamp = environment.buildTimeStamp;
+						const lastUpdated = `Last updated on: ${buildTimeStamp}`;
+						return saveLines({
+							lines: lines.concat([lastUpdated]),
+						});
+					}),
 					catchError(err => {
 						console.error('Uh oh!', err);
 						return EMPTY;

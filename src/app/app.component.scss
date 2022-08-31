@@ -13,8 +13,10 @@ main {
 	margin: 12px auto;
 	max-width: 1400px;
 	min-height: calc(100vh - 24px);
+	padding: 12px;
 
 	.history {
+		align-self: flex-start;
 		margin: 0;
 		padding: 0;
 		word-wrap: break-word;
