@@ -20,8 +20,10 @@ export class HistoryEffects {
 					map(lines => {
 						const buildTimeStamp = environment.buildTimeStamp;
 						const lastUpdated = `Last updated on: ${buildTimeStamp}`;
+						const welcomeMessage = `If you're a new patron to the cafe, type in 'welcome'.`;
+
 						return saveLines({
-							lines: lines.concat([lastUpdated]),
+							lines: lines.concat([lastUpdated, welcomeMessage]),
 						});
 					}),
 					catchError(err => {
