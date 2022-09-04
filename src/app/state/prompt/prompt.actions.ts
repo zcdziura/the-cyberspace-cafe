@@ -15,3 +15,7 @@ export const isCursorBlinking = createAction(
 export const processCurrentCommand = createAction(
 	'[Prompt] Process Current Command'
 );
+
+export const addCommandToHistory = createAction(
+	'[Prompt] Add Command to History'
+);

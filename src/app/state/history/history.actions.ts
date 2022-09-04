@@ -6,3 +6,8 @@ export const saveLines = createAction(
 	'[History] Save Lines',
 	props<{ lines: string[] }>()
 );
+
+export const saveLine = createAction(
+	'[History] Save Line',
+	props<{ line: string }>()
+);
