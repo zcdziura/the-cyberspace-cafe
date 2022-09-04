@@ -11,3 +11,7 @@ export const isCursorBlinking = createAction(
 	'[Prompt] Is Cursor Blinking',
 	props<{ isCursorBlinking: boolean }>()
 );
+
+export const processCurrentCommand = createAction(
+	'[Prompt] Process Current Command'
+);

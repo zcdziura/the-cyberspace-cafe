@@ -14,10 +14,11 @@ import {
 	backspace,
 	isCursorBlinking,
 	keyPress,
+	processCurrentCommand,
 } from './state/prompt/prompt.actions';
 import { PromptState } from './state/prompt/prompt.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AppService {
 	private afterTypingDelay: Subscription = new Subscription();
 	private readonly isDoneTyping$ = new Subject<void>();
@@ -78,14 +79,6 @@ export class AppService {
 		}, 500);
 	}
 
-	private dispatchCommand(command: CommandKeybinding) {
-		switch (command) {
-			case CommandKeybinding.Backspace:
-				this.store$.dispatch(backspace());
-				break;
-		}
-	}
-
 	private mapCommandKeybinding(
 		key: string,
 		isControl: boolean,
@@ -96,8 +89,23 @@ export class AppService {
 			case 'backspace':
 				return CommandKeybinding.Backspace;
 
+			case 'enter':
+				return CommandKeybinding.Enter;
+
 			default:
 				return null;
+		}
+	}
+
+	private dispatchCommand(command: CommandKeybinding) {
+		switch (command) {
+			case CommandKeybinding.Backspace:
+				this.store$.dispatch(backspace());
+				break;
+
+			case CommandKeybinding.Enter:
+				this.store$.dispatch(processCurrentCommand());
+				break;
 		}
 	}
 }
