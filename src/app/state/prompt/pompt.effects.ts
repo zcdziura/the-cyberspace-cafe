@@ -22,6 +22,7 @@ export class PromptEffects {
 			withLatestFrom(this.store$.select(selectCommand)),
 			tap(([_, line]) => {
 				this.store$.dispatch(saveLine({ line }));
+				this.appService.processCommand(line.split(' '));
 			}),
 			switchMap(() => [clear()])
 		)

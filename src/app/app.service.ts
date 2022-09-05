@@ -9,6 +9,7 @@ import {
 	tap,
 } from 'rxjs';
 import { CommandKeybinding } from './models/command-keybinding';
+import { Command } from './models/command/command';
 import { loadBanner } from './state/history/history.actions';
 import {
 	backspace,
@@ -64,6 +65,17 @@ export class AppService {
 			if (command !== null) {
 				this.dispatchCommand(command);
 			}
+		}
+	}
+
+	public processCommand(command: string[]) {
+		const commandName = command[0];
+		switch (commandName.toLowerCase()) {
+			case 'welcome':
+				break;
+
+			default:
+				return;
 		}
 	}
 
