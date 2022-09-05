@@ -106,6 +106,9 @@ export class AppService {
 			case CommandKeybinding.Enter:
 				this.store$.dispatch(processCurrentCommand());
 				break;
+
+			default:
+				break;
 		}
 	}
 }

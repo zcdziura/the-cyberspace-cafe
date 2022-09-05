@@ -5,6 +5,8 @@ export const keyPress = createAction(
 	props<{ key: string }>()
 );
 
+export const clear = createAction('[Prompt] Clear');
+
 export const backspace = createAction('[Prompt] Backspace');
 
 export const isCursorBlinking = createAction(

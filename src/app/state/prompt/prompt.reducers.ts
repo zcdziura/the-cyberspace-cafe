@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { backspace, isCursorBlinking, keyPress } from './prompt.actions';
+import { backspace, clear, isCursorBlinking, keyPress } from './prompt.actions';
 import { PromptState } from './prompt.model';
 
 export const promptStateFeatureName = 'prompt';
@@ -14,6 +14,10 @@ export const promptStateReducers = createReducer(
 	on(keyPress, (state, { key }) => ({
 		...state,
 		command: state.command + key,
+	})),
+	on(clear, state => ({
+		...state,
+		command: '',
 	})),
 	on(backspace, state => ({
 		...state,

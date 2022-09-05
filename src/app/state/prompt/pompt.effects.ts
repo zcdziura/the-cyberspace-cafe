@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, switchMap, tap } from 'rxjs';
+import { of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { AppService } from 'src/app/app.service';
-import { processCurrentCommand } from './prompt.actions';
+import { saveLine } from '../history/history.actions';
+import { clear, processCurrentCommand } from './prompt.actions';
 import { PromptState } from './prompt.model';
 import { selectCommand } from './prompt.selectors';
 
@@ -15,13 +16,14 @@ export class PromptEffects {
 		private readonly appService: AppService
 	) {}
 
-	processCommand$ = createEffect(
-		() =>
-			this.actions$.pipe(
-				ofType(processCurrentCommand),
-				switchMap(() => this.store$.select(selectCommand)),
-				tap(console.log)
-			),
-		{ dispatch: false }
+	processCommand$ = createEffect(() =>
+		this.actions$.pipe(
+			ofType(processCurrentCommand),
+			withLatestFrom(this.store$.select(selectCommand)),
+			tap(([_, line]) => {
+				this.store$.dispatch(saveLine({ line }));
+			}),
+			switchMap(() => [clear()])
+		)
 	);
 }

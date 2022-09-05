@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { saveLines } from './history.actions';
+import { saveLine, saveLines } from './history.actions';
 import { HistoryState } from './history.model';
 
 export const historyStateFeatureName = 'history';
@@ -13,5 +13,9 @@ export const historyStateReducers = createReducer(
 	on(saveLines, (state, { lines }) => ({
 		...state,
 		lines: state.lines.concat(lines).slice(-1000),
+	})),
+	on(saveLine, (state, { line }) => ({
+		...state,
+		lines: Array.of(...state.lines, `▶ ${line}`).slice(-1000),
 	}))
 );
