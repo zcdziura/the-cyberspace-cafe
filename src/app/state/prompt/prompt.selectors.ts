@@ -15,3 +15,8 @@ export const selectIsCursorBlinking = createSelector(
 	featureSelector,
 	state => state.isCursorBlinking
 );
+
+export const selectCurrentPromptMode = createSelector(
+	featureSelector,
+	state => state.mode
+);

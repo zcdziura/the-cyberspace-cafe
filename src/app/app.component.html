@@ -2,10 +2,12 @@
 	<pre class="history">{{ history$ | async }}</pre>
 
 	<div class="prompt">
-		<span class="privilege-indicator">&#9654;&nbsp;</span>
+		<span *ngIf="(currentPromptMode$ | async) == 'Stdin'" class="indicator">&#9654;&nbsp;</span>
 		<span class="command-line">{{ command$ | async }}</span>
-		<span
-			class="cursor"
+		<ng-template >
+
+		</ng-template>
+		<span class="cursor"
 			[ngClass]="{ blinking: isCursorBlinking$ | async }"
 		></span>
 	</div>
