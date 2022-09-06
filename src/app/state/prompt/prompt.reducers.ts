@@ -1,12 +1,13 @@
 import { createReducer, on } from '@ngrx/store';
 import { backspace, clear, isCursorBlinking, keyPress } from './prompt.actions';
-import { PromptState } from './prompt.model';
+import { PromptMode, PromptState } from './prompt.model';
 
 export const promptStateFeatureName = 'prompt';
 
 export const initialState: PromptState = {
 	stdin: '',
 	isCursorBlinking: true,
+	mode: PromptMode.Stdin,
 };
 
 export const promptStateReducers = createReducer(
