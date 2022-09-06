@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { PromptMode } from './prompt.model';
 
 export const keyPress = createAction(
 	'[Prompt] Key Press',
@@ -20,4 +21,9 @@ export const processCurrentCommand = createAction(
 
 export const addCommandToHistory = createAction(
 	'[Prompt] Add Command to History'
+);
+
+export const switchMode = createAction(
+	'[Prompt] Switch Mode',
+	props<{ mode: PromptMode }>()
 );
