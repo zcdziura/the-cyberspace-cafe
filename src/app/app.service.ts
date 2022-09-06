@@ -16,8 +16,9 @@ import {
 	isCursorBlinking,
 	keyPress,
 	processCurrentCommand,
+	switchMode,
 } from './state/prompt/prompt.actions';
-import { PromptState } from './state/prompt/prompt.model';
+import { PromptMode, PromptState } from './state/prompt/prompt.model';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
@@ -110,6 +111,8 @@ export class AppService {
 	}
 
 	private dispatchCommand(command: CommandKeybinding) {
+		this.store$.dispatch(switchMode({ mode: PromptMode.Command }));
+
 		switch (command) {
 			case CommandKeybinding.Backspace:
 				this.store$.dispatch(backspace());
