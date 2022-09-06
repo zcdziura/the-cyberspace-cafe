@@ -5,7 +5,7 @@ import { PromptState } from './prompt.model';
 export const promptStateFeatureName = 'prompt';
 
 export const initialState: PromptState = {
-	command: '',
+	stdin: '',
 	isCursorBlinking: true,
 };
 
@@ -13,18 +13,18 @@ export const promptStateReducers = createReducer(
 	initialState,
 	on(keyPress, (state, { key }) => ({
 		...state,
-		command: state.command + key,
+		stdin: state.stdin + key,
 	})),
 	on(clear, state => ({
 		...state,
-		command: '',
+		stdin: '',
 	})),
 	on(backspace, state => ({
 		...state,
-		command:
-			state.command.length === 0
-				? state.command
-				: state.command.substring(0, state.command.length - 1),
+		stdin:
+			state.stdin.length === 0
+				? state.stdin
+				: state.stdin.substring(0, state.stdin.length - 1),
 	})),
 	on(isCursorBlinking, (state, { isCursorBlinking }) => ({
 		...state,

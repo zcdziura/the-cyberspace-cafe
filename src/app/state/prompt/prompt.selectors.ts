@@ -8,7 +8,7 @@ const featureSelector = createFeatureSelector<PromptState>(
 
 export const selectCommand = createSelector(
 	featureSelector,
-	state => state.command
+	state => state.stdin
 );
 
 export const selectIsCursorBlinking = createSelector(

@@ -1,4 +1,4 @@
 export interface PromptState {
-	command: string;
+	stdin: string;
 	isCursorBlinking: boolean;
 }
