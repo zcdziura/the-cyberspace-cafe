@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.keyPressEventsSubscription =
 			this.service.keyPressEvents$.subscribe();
 
-		this.service.loadBanner();
+		this.service.loadStaticAssetsFromServer();
 	}
 
 	ngOnDestroy(): void {

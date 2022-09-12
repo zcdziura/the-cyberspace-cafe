@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, map, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { loadBanner, saveLines } from './history.actions';
+import { loadStaticAssetsFromServer, saveLines } from './history.actions';
 import { HistoryService } from './history.service';
 
 @Injectable()
@@ -12,9 +12,9 @@ export class HistoryEffects {
 		private readonly service: HistoryService
 	) {}
 
-	loadBannerFile$ = createEffect(() =>
+	loadStaticAssetsFromServer$ = createEffect(() =>
 		this.actions$.pipe(
-			ofType(loadBanner),
+			ofType(loadStaticAssetsFromServer),
 			switchMap(() =>
 				this.service.fetchBanner().pipe(
 					map(lines => {

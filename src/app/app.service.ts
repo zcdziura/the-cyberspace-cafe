@@ -1,14 +1,18 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
 	asyncScheduler,
+	forkJoin,
 	fromEvent,
+	map,
 	skipUntil,
 	Subject,
 	Subscription,
 	tap,
 } from 'rxjs';
-import { loadBanner } from './state/history/history.actions';
+import { environment } from 'src/environments/environment';
+import { saveLines } from './state/history/history.actions';
 import {
 	backspace,
 	isCursorBlinking,
@@ -28,10 +32,17 @@ export class AppService {
 		skipUntil(this.isDoneTyping$)
 	);
 
-	constructor(private readonly store$: Store<PromptState>) {}
+	constructor(
+		private readonly http: HttpClient,
+		private readonly store$: Store<PromptState>
+	) {}
 
-	public loadBanner() {
-		this.store$.dispatch(loadBanner());
+	public loadStaticAssetsFromServer() {
+		forkJoin([this.loadBanner()])
+			.subscribe(actions =>
+				actions.forEach(action => this.store$.dispatch(action))
+			)
+			.unsubscribe();
 	}
 
 	public onKeyPress($event: KeyboardEvent) {
@@ -70,6 +81,25 @@ export class AppService {
 			default:
 				return;
 		}
+	}
+
+	private loadBanner() {
+		return this.http
+			.get('/assets/banner.txt', { responseType: 'text' })
+			.pipe(
+				map(text => {
+					const lastUpdated = `Last updated on: ${environment.buildTimeStamp}`;
+					const welcomeMessage = `To get started, type in 'welcome'.`;
+
+					return saveLines({
+						lines: Array.of(
+							...text.split('\n'),
+							lastUpdated,
+							welcomeMessage
+						),
+					});
+				})
+			);
 	}
 
 	private setCursorState() {

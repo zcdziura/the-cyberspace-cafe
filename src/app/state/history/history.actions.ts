@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
-export const loadBanner = createAction('[History] Load Banner');
+export const loadStaticAssetsFromServer = createAction(
+	'[History] Load Static Assets from Server'
+);
 
 export const saveLines = createAction(
 	'[History] Save Lines',
