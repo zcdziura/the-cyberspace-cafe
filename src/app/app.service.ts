@@ -8,8 +8,6 @@ import {
 	Subscription,
 	tap,
 } from 'rxjs';
-import { CommandKeybinding } from './models/command-keybinding';
-import { Command } from './models/command/command';
 import { loadBanner } from './state/history/history.actions';
 import {
 	backspace,
@@ -50,22 +48,16 @@ export class AppService {
 		this.setCursorState();
 		this.store$.dispatch(isCursorBlinking({ isCursorBlinking: false }));
 
-		const key = $event.key;
-		const isPrintable = key.length === 1;
-
+		const isPrintable = $event.key.length === 1;
 		if (isPrintable) {
-			this.store$.dispatch(keyPress({ key }));
+			this.store$.dispatch(keyPress({ key: $event.key }));
 		} else {
-			const command = this.mapCommandKeybinding(
+			this.dispatchCommand(
 				$event.key,
 				$event.ctrlKey,
 				$event.shiftKey,
 				$event.altKey
 			);
-
-			if (command !== null) {
-				this.dispatchCommand(command);
-			}
 		}
 	}
 
@@ -92,38 +84,26 @@ export class AppService {
 		}, 500);
 	}
 
-	private mapCommandKeybinding(
+	private dispatchCommand(
 		key: string,
-		isControl: boolean,
+		isCtrl: boolean,
 		isShift: boolean,
 		isAlt: boolean
-	): CommandKeybinding | null {
+	) {
 		switch (key.toLowerCase()) {
 			case 'backspace':
-				return CommandKeybinding.Backspace;
-
-			case 'enter':
-				return CommandKeybinding.Enter;
-
-			default:
-				return null;
-		}
-	}
-
-	private dispatchCommand(command: CommandKeybinding) {
-		this.store$.dispatch(switchMode({ mode: PromptMode.Command }));
-
-		switch (command) {
-			case CommandKeybinding.Backspace:
 				this.store$.dispatch(backspace());
 				break;
 
-			case CommandKeybinding.Enter:
-				this.store$.dispatch(processCurrentCommand());
+			case 'enter':
+				[
+					switchMode({ mode: PromptMode.Command }),
+					processCurrentCommand(),
+				].forEach(action => this.store$.dispatch(action));
 				break;
 
 			default:
-				break;
+				return;
 		}
 	}
 }
