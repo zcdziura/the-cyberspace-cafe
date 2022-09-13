@@ -13,7 +13,6 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import * as YAML from 'yaml';
-import { Commands } from './models/commands';
 import { defineCommands } from './state/commands/commands.actions';
 import { saveLines } from './state/history/history.actions';
 import {
@@ -158,3 +157,7 @@ export class AppService {
 		}
 	}
 }
+
+type Commands = {
+	[commandName: string]: (string | { prompt: string })[];
+};

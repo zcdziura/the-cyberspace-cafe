@@ -1,7 +1,6 @@
 export interface CommandsState {
-	welcome: (string | CommandInput)[];
-}
-
-export interface CommandInput {
-	prompt: string;
+	currentCommand: string | null;
+	commands: {
+		[commandName: string]: (string | { prompt: string })[];
+	};
 }
