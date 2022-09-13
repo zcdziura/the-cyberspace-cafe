@@ -12,6 +12,9 @@ import {
 	tap,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import * as YAML from 'yaml';
+import { Commands } from './models/commands';
+import { defineCommands } from './state/commands/commands.actions';
 import { saveLines } from './state/history/history.actions';
 import {
 	backspace,
@@ -40,8 +43,11 @@ export class AppService {
 	) {}
 
 	public loadStaticAssetsFromServer() {
-		this.staticAssetsSubscription = forkJoin([this.loadBanner()]).subscribe(
-			actions => actions.forEach(action => this.store$.dispatch(action))
+		this.staticAssetsSubscription = forkJoin([
+			this.loadBanner(),
+			this.loadCommands(),
+		]).subscribe(actions =>
+			actions.forEach(action => this.store$.dispatch(action))
 		);
 	}
 
@@ -102,6 +108,17 @@ export class AppService {
 							welcomeMessage
 						),
 					});
+				})
+			);
+	}
+
+	private loadCommands() {
+		return this.http
+			.get('/assets/commands.yaml', { responseType: 'text' })
+			.pipe(
+				map(text => {
+					const commands: Commands = YAML.parse(text);
+					return defineCommands({ commands });
 				})
 			);
 	}

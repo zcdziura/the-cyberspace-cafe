@@ -1,8 +1,6 @@
 ---
-commands:
-  - name: welcome
-    lines:
-      - Welcome to The Cyberspace Cafe!
-      - 'The Cafe is a place within the `Tilde-verse`: a shared, tiny Unix computer where people can come together and create cool things.'
-      - 'At any time, you can enter `help` to view a list of available commands.'
-      - 'You can then type `help <command>` for further help with a particular command.'
+welcome:
+  - Welcome to The Cyberspace Cafe!
+  - 'The Cafe is a place within the `Tilde-verse`: a shared, tiny Unix computer where people can come together and create cool things.'
+  - 'At any time, you can enter `help` to view a list of available commands.'
+  - 'You can then type `help <command>` for further help with a particular command.'

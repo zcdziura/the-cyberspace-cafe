@@ -1,4 +1,4 @@
-export interface CommandsState {
+export interface Commands {
 	welcome: (string | CommandInput)[];
 }
 
