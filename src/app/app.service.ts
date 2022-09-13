@@ -24,8 +24,10 @@ import { PromptMode, PromptState } from './state/prompt/prompt.model';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
-	private afterTypingDelay: Subscription = new Subscription();
+	private afterTypingDelay = new Subscription();
 	private readonly isDoneTyping$ = new Subject<void>();
+
+	staticAssetsSubscription = new Subscription();
 
 	readonly keyPressEvents$ = fromEvent(document, 'keydown').pipe(
 		tap(e => this.onKeyPress(e as KeyboardEvent)),
@@ -38,11 +40,9 @@ export class AppService {
 	) {}
 
 	public loadStaticAssetsFromServer() {
-		forkJoin([this.loadBanner()])
-			.subscribe(actions =>
-				actions.forEach(action => this.store$.dispatch(action))
-			)
-			.unsubscribe();
+		this.staticAssetsSubscription = forkJoin([this.loadBanner()]).subscribe(
+			actions => actions.forEach(action => this.store$.dispatch(action))
+		);
 	}
 
 	public onKeyPress($event: KeyboardEvent) {
@@ -81,6 +81,10 @@ export class AppService {
 			default:
 				return;
 		}
+	}
+
+	public unsubscribe() {
+		this.staticAssetsSubscription.unsubscribe();
 	}
 
 	private loadBanner() {
