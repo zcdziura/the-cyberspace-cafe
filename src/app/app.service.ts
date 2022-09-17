@@ -68,23 +68,12 @@ export class AppService {
 		if (isPrintable) {
 			this.store$.dispatch(keyPress({ key: $event.key }));
 		} else {
-			this.dispatchCommand(
+			this.processCommand(
 				$event.key,
 				$event.ctrlKey,
 				$event.shiftKey,
 				$event.altKey
 			);
-		}
-	}
-
-	public processCommand(command: string[]) {
-		const commandName = command[0];
-		switch (commandName.toLowerCase()) {
-			case 'welcome':
-				break;
-
-			default:
-				return;
 		}
 	}
 
@@ -134,7 +123,7 @@ export class AppService {
 		}, 500);
 	}
 
-	private dispatchCommand(
+	private processCommand(
 		key: string,
 		isCtrl: boolean,
 		isShift: boolean,
