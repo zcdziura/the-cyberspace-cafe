@@ -61,7 +61,7 @@ export class AppService {
 			$event.preventDefault();
 		}
 
-		this.setCursorState();
+		this.setCursorStateResetter();
 		this.store$.dispatch(isCursorBlinking({ isCursorBlinking: false }));
 
 		const isPrintable = $event.key.length === 1;
@@ -122,7 +122,7 @@ export class AppService {
 			);
 	}
 
-	private setCursorState() {
+	private setCursorStateResetter() {
 		if (!this.afterTypingDelay.closed) {
 			this.afterTypingDelay.unsubscribe();
 		}
