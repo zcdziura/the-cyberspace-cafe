@@ -6,9 +6,9 @@ import { HistoryState } from './state/history/history.model';
 import { selectLines } from './state/history/history.selectors';
 import { PromptState } from './state/prompt/prompt.model';
 import {
-	selectCommand,
 	selectCurrentPromptMode,
 	selectIsCursorBlinking,
+	selectStdin,
 } from './state/prompt/prompt.selectors';
 
 @Component({
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	private keyPressEventsSubscription!: Subscription;
 
 	public readonly history$ = this.store$.select(selectLines);
-	public readonly command$ = this.store$.select(selectCommand);
+	public readonly command$ = this.store$.select(selectStdin);
 	public readonly isCursorBlinking$ = this.store$.select(
 		selectIsCursorBlinking
 	);

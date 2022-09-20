@@ -15,14 +15,6 @@ export const isCursorBlinking = createAction(
 	props<{ isCursorBlinking: boolean }>()
 );
 
-export const processCurrentCommand = createAction(
-	'[Prompt] Process Current Command'
-);
-
-export const addCommandToHistory = createAction(
-	'[Prompt] Add Command to History'
-);
-
 export const switchMode = createAction(
 	'[Prompt] Switch Mode',
 	props<{ mode: PromptMode }>()

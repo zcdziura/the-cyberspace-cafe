@@ -6,3 +6,7 @@ export const defineCommands = createAction(
 		commands: { [commandName: string]: (string | { prompt: string })[] };
 	}>()
 );
+
+export const processCurrentCommand = createAction(
+	'[Prompt] Process Current Command'
+);

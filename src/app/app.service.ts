@@ -13,16 +13,17 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import * as YAML from 'yaml';
-import { defineCommands } from './state/commands/commands.actions';
+import {
+	defineCommands,
+	processCurrentCommand,
+} from './state/commands/commands.actions';
 import { saveLines } from './state/history/history.actions';
 import {
 	backspace,
 	isCursorBlinking,
 	keyPress,
-	processCurrentCommand,
-	switchMode,
 } from './state/prompt/prompt.actions';
-import { PromptMode, PromptState } from './state/prompt/prompt.model';
+import { PromptState } from './state/prompt/prompt.model';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
@@ -135,10 +136,7 @@ export class AppService {
 				break;
 
 			case 'enter':
-				[
-					switchMode({ mode: PromptMode.Command }),
-					processCurrentCommand(),
-				].forEach(action => this.store$.dispatch(action));
+				this.store$.dispatch(processCurrentCommand());
 				break;
 
 			default:

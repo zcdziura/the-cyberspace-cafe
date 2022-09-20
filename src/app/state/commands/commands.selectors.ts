@@ -16,6 +16,15 @@ export const selectCurrentCommand = createSelector(
 	state => state.currentCommand
 );
 
+export const selectCommandIfExists = (command: string) =>
+	createSelector(featureSelector, selectAllCommands, (_, commands) => {
+		if (!!commands[command]) {
+			return commands[command];
+		} else {
+			return null;
+		}
+	});
+
 export const selectCurrentCommandPrompts = createSelector(
 	featureSelector,
 	selectAllCommands,

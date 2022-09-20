@@ -13,3 +13,7 @@ export const saveLine = createAction(
 	'[History] Save Line',
 	props<{ line: string }>()
 );
+
+export const addCurrentStdinToHistory = createAction(
+	'[History] Add Current Stdin to History'
+);

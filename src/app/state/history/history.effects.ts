@@ -1,16 +1,53 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, EMPTY, map, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { catchError, EMPTY, first, map, switchMap, withLatestFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { loadStaticAssetsFromServer, saveLines } from './history.actions';
+import { PromptMode, PromptState } from '../prompt/prompt.model';
+import {
+	selectCurrentPromptMode,
+	selectStdin,
+} from '../prompt/prompt.selectors';
+import {
+	addCurrentStdinToHistory,
+	loadStaticAssetsFromServer,
+	saveLine,
+	saveLines,
+} from './history.actions';
 import { HistoryService } from './history.service';
 
 @Injectable()
 export class HistoryEffects {
 	constructor(
 		private readonly actions$: Actions,
+		private readonly store$: Store<PromptState>,
 		private readonly service: HistoryService
 	) {}
+
+	addCurrentStdinToHistory$ = createEffect(() =>
+		this.actions$.pipe(
+			ofType(addCurrentStdinToHistory),
+			switchMap(() =>
+				this.store$
+					.select(selectStdin)
+					.pipe(
+						first(),
+						withLatestFrom(
+							this.store$.select(selectCurrentPromptMode)
+						)
+					)
+			),
+			map(([stdin, promptMode]) => {
+				let line = stdin;
+				if (promptMode === PromptMode.Stdin) {
+					line = `▶ ${line}`;
+				}
+
+				return line;
+			}),
+			map(line => saveLine({ line }))
+		)
+	);
 
 	loadStaticAssetsFromServer$ = createEffect(() =>
 		this.actions$.pipe(

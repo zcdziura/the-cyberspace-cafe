@@ -6,7 +6,7 @@ const featureSelector = createFeatureSelector<PromptState>(
 	promptStateFeatureName
 );
 
-export const selectCommand = createSelector(
+export const selectStdin = createSelector(
 	featureSelector,
 	state => state.stdin
 );
