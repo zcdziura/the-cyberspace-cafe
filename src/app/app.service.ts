@@ -17,6 +17,7 @@ import {
 	defineCommands,
 	processCurrentCommand,
 } from './state/commands/commands.actions';
+import { Commands } from './state/commands/commands.model';
 import { saveLines } from './state/history/history.actions';
 import {
 	backspace,
@@ -144,7 +145,3 @@ export class AppService {
 		}
 	}
 }
-
-type Commands = {
-	[commandName: string]: (string | { prompt: string })[];
-};

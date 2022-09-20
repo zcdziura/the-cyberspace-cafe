@@ -21,7 +21,9 @@ export const selectCommandIfExists = (command: string) =>
 		if (!!commands[command]) {
 			return commands[command];
 		} else {
-			return null;
+			throw new Error(
+				`Command not found: "${command}". For a list of all commands, type \`help\`.`
+			);
 		}
 	});
 

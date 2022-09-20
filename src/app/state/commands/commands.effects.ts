@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, tap, withLatestFrom } from 'rxjs';
-import { addCurrentStdinToHistory } from '../history/history.actions';
+import { catchError, map, mergeMap, tap, withLatestFrom } from 'rxjs';
+import { saveLine } from '../history/history.actions';
 import { clear, switchMode } from '../prompt/prompt.actions';
 import { PromptMode, PromptState } from '../prompt/prompt.model';
 import {
@@ -10,13 +10,15 @@ import {
 	selectStdin,
 } from '../prompt/prompt.selectors';
 import { processCurrentCommand } from './commands.actions';
+import { CommandsState } from './commands.model';
+import { selectCommandIfExists } from './commands.selectors';
 import { CommandsService } from './commands.service';
 
 @Injectable()
 export class CommandsEffects {
 	constructor(
 		private readonly actions$: Actions,
-		private readonly store$: Store<PromptState>,
+		private readonly store$: Store<CommandsState | PromptState>,
 		private readonly service: CommandsService
 	) {}
 
@@ -28,15 +30,21 @@ export class CommandsEffects {
 				this.store$.select(selectCurrentPromptMode)
 			),
 			map(([_, stdin, currentPromptMode]) => [stdin, currentPromptMode]),
-			tap(([_, currentPromptMode]) => {
+			tap(([stdin, currentPromptMode]) => {
+				this.store$.dispatch(saveLine({ line: stdin }));
+
 				if (currentPromptMode === PromptMode.Stdin) {
 					this.store$.dispatch(
 						switchMode({ mode: PromptMode.Command })
 					);
 				}
 			}),
-			tap(() => this.store$.dispatch(addCurrentStdinToHistory())),
 			map(([stdin]) => this.service.splitCommandAndArguments(stdin)),
+			mergeMap(([command, ...args]) =>
+				this.store$
+					.select(selectCommandIfExists(command))
+					.pipe(catchError(err => [err]))
+			),
 			tap(stdin => this.service.processStdin(stdin)),
 			map(() => clear())
 		)
