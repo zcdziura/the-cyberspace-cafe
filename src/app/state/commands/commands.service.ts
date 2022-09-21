@@ -45,7 +45,33 @@ export class CommandsService {
 	}
 
 	processStdin(stdin: string[]) {
-		this.store$.dispatch(saveLines({ lines: stdin }));
+		const lines = stdin.map(line => {
+			let words = line.split(' ');
+			let buffer: string[][] = [];
+			let lineLength = 0;
+			let idx = 0;
+			let previousIdx = -1;
+
+			while (words.length > 0 && !!words[idx]) {
+				const word = words[idx];
+				lineLength += word.length + 1;
+				idx += 1;
+				previousIdx += 1;
+
+				if (lineLength >= 85) {
+					buffer.push(words.slice(previousIdx, idx));
+					words = words.slice(idx);
+				}
+			}
+
+			if (buffer.length === 0) {
+				buffer.push(words);
+			}
+
+			return buffer.flatMap(line => line.join(' ')).pop() as string;
+		});
+
+		this.store$.dispatch(saveLines({ lines }));
 		this.store$.dispatch(switchMode({ mode: PromptMode.Stdin }));
 	}
 }
